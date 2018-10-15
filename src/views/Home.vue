@@ -13,6 +13,21 @@ export default {
   name: "home",
   components: {
     HelloWorld
+  },
+  mounted() {
+    get();
   }
 };
+
+function get() {
+  const xhr = new XMLHttpRequest();
+  xhr.open("get", "http://localhost:8081/hello");
+  xhr.onreadystatechange = () => {
+    if (xhr.readyState === 4 && xhr.status === 200) {
+      console.log(xhr.response);
+    }
+  };
+  xhr.setRequestHeader("content-type", "application/json");
+  xhr.send();
+}
 </script>

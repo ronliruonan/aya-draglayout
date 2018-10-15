@@ -18,7 +18,7 @@
   color: #2c3e50;
 }
 #nav {
-  padding: 30px;
+  padding: 10px;
   a {
     font-weight: bold;
     color: #2c3e50;
@@ -26,5 +26,18 @@
       color: #42b983;
     }
   }
+}
+ul {
+  list-style: none;
+  padding: 0;
+}
+li {
+  display: inline-block;
+  margin: 5px 10px;
+  padding: 5px 10px;
+  border: 1px solid #e6e6e6;
+}
+.el-row {
+  padding-top: 20px;
 }
 </style>

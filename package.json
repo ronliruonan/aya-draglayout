@@ -9,8 +9,11 @@
     "test:e2e": "vue-cli-service test:e2e"
   },
   "dependencies": {
+    "element-ui": "^2.4.8",
+    "es6-uuid": "^1.0.1",
     "vue": "^2.5.17",
     "vue-router": "^3.0.1",
+    "vuedraggable": "^2.16.0",
     "vuex": "^3.0.1"
   },
   "devDependencies": {
@@ -23,5 +26,7 @@
     "node-sass": "^4.9.0",
     "sass-loader": "^7.0.1",
     "vue-template-compiler": "^2.5.17"
-  }
+  },
+  "author": "RonLi",
+  "license": "MIT"
 }
