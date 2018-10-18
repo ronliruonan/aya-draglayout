@@ -12,12 +12,12 @@
         <el-button @click="addRow([8, 8, 8])">新增 8:8:8</el-button>
         <el-button @click="addRow()">新增 6:6:6:6</el-button>
         <el-button @click="preview()">预览</el-button>
-        <el-row :gutter="10" v-for="row in rows" :key="row.id">
-          <el-col v-for="zone in row.zones" :key="zone.id" :md="zone.size" style="border:1px dotted #ddd;min-height:88px;">
+        <el-row :gutter="10" v-for="(row,rowIndex) in rows" :key="rowIndex">
+          <el-col v-for="(zone,zoneIndex) in row.zones" :key="zoneIndex" :md="zone.size" style="border:1px dotted #ddd;min-height:88px;">
             <!-- 拖拽盒子 -->
             <draggable v-model="zone.widgets" :options="{ group : 'ronli' }" @start="drag=true" @end="drag=false">
               <!-- 拖拽主键 -->
-              <div v-for="item in zone.widgets" :key="item.id">
+              <div v-for="(item,itemIndex) in zone.widgets" :key="itemIndex">
                 <p class="cursor--move">鼠标 hold住这儿，再拖拽 -- <i style="color:red;">这里写一个删除</i></p>
                 <component :is="item.name"></component>
               </div>
@@ -26,7 +26,7 @@
             </draggable>
           </el-col>
           <!-- 行删除btn -->
-          <el-button type="danger" icon="el-icon-delete" circle title="删除该行" @click="deleteRow(row.id)" style="position:absolute; left:-10px; top:10px;"></el-button>
+          <el-button type="danger" icon="el-icon-delete" circle title="删除该行" @click="deleteRow(rowIndex)" style="position:absolute; left:-10px; top:10px;"></el-button>
         </el-row>
       </el-main>
       <!-- <pre style="text-align:left;">{{rows}}</pre> -->
@@ -38,7 +38,6 @@
 </template>
 
 <script>
-import UUID from "es6-uuid";
 import draggable from "vuedraggable";
 import WidgetArea from "@/components/portalconfig/WidgetArea.vue";
 import ProtalPreview from "@/components/portalconfig/PortalPreview.vue";
@@ -59,12 +58,10 @@ export default {
   methods: {
     addRow(cols = [6, 6, 6, 6]) {
       const newRow = {
-        id: UUID(32, 36),
         zones: []
       };
       cols.forEach(colsize => {
         newRow.zones.push({
-          id: UUID(32, 36),
           size: colsize,
           widgets: []
         });
@@ -75,9 +72,8 @@ export default {
       this.isPreview =
         vbool === null || vbool === undefined ? !this.isPreview : !!vbool;
     },
-    deleteRow(rowid) {
-      const findIndex = this.rows.findIndex(item => item.id == rowid);
-      this.rows.splice(findIndex, 1);
+    deleteRow(rowindex) {
+      this.rows.splice(rowindex, 1);
     }
   },
   data() {
@@ -85,25 +81,20 @@ export default {
       isPreview: false,
       rows: [
         {
-          id: UUID(32, 36),
           zones: [
             {
-              id: UUID(32, 36),
               size: 12,
               widgets: [
                 {
-                  id: UUID(32, 36),
                   name: "AyaExample",
                   alias: "第一纵Origin左边左"
                 }
               ]
             },
             {
-              id: UUID(32, 36),
               size: 12,
               widgets: [
                 {
-                  id: UUID(32, 36),
                   name: "AyaExample",
                   alias: "第一纵Origin右边右"
                 }
@@ -112,26 +103,21 @@ export default {
           ]
         },
         {
-          id: UUID(32, 36),
           zones: [
             {
-              id: UUID(32, 36),
               size: 8,
               widgets: [
                 {
-                  id: UUID(32, 36),
                   name: "AyaTimer",
                   alias: "预设Timer"
                 }
               ]
             },
             {
-              id: UUID(32, 36),
               size: 8,
               widgets: []
             },
             {
-              id: UUID(32, 36),
               size: 8,
               widgets: []
             }

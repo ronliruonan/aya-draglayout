@@ -4,10 +4,10 @@
       <h3>页面预览</h3>
       <el-button type="warning" icon="el-icon-close" style="position:absolute;top:25px;right:15px;" @click="close">关闭预览</el-button>
     </div>
-    <el-row :gutter="10" v-for="row in contents" :key="row.id">
-      <el-col v-for="zone in row.zones" :key="zone.id" :md="zone.size">
+    <el-row :gutter="10" v-for="(row,rowIndex) in contents" :key="rowIndex">
+      <el-col v-for="(zone,zoneIndex) in row.zones" :key="zoneIndex" :md="zone.size">
         <div v-if="!zone.widgets.length">&nbsp;</div>
-        <div v-for="item in zone.widgets" :key="item.id">
+        <div v-for="(item,itemIndex) in zone.widgets" :key="itemIndex">
           <component :is="item.name"></component>
         </div>
       </el-col>
