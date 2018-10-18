@@ -1,5 +1,5 @@
 <template>
-  <el-card>
+  <el-card style="text-align:center;">
     <h4>小挂件-计时器</h4>
     <el-main>
         出生于 <em style="color:red;">{{ ms }}s</em> 前

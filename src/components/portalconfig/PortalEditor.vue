@@ -6,30 +6,34 @@
     </el-aside>
     <el-container>
       <el-header style="background-color:#B3C0D1;">
-        <p>布局</p>
-      </el-header>
-      <el-main>
+        <el-button @click="addRow([24])">新增 24</el-button>
+        <el-button @click="addRow([12, 12])">新增 12:12</el-button>
         <el-button @click="addRow([8, 8, 8])">新增 8:8:8</el-button>
         <el-button @click="addRow()">新增 6:6:6:6</el-button>
-        <el-button @click="preview()">预览</el-button>
-        <el-row :gutter="10" v-for="row in rows" :key="row.id">
-          <el-col v-for="zone in row.zones" :key="zone.id" :md="zone.size" style="border:1px dotted #ddd;min-height:88px;">
+        <el-button @click="confirmUpdate" type="danger">确认修改</el-button>
+        <el-button @click="save" type="primary">保存</el-button>
+        <el-button @click="preview">预览</el-button>
+      </el-header>
+      <el-main>
+        <h1 v-if="$store.state.userid ==='aya'" style="text-align: center;">右上角选择用户</h1>
+        <el-row :gutter="10" v-for="(row, rowIndex) in rows" :key="rowIndex">
+          <el-col v-for="(zone,zoneIndex) in row.zones" :key="zoneIndex" :md="zone.size" style="border:1px dotted #ddd;min-height:88px;">
             <!-- 拖拽盒子 -->
             <draggable v-model="zone.widgets" :options="{ group : 'ronli' }" @start="drag=true" @end="drag=false">
               <!-- 拖拽主键 -->
-              <div v-for="item in zone.widgets" :key="item.id">
+              <div v-for="(widget, widgetIndex) in zone.widgets" :key="widgetIndex">
                 <p class="cursor--move">鼠标 hold住这儿，再拖拽 -- <i style="color:red;">这里写一个删除</i></p>
-                <component :is="item.name"></component>
+                <component :is="widget.name"></component>
               </div>
               <div class="cursor--forbid" v-if="!zone.widgets.length" @start="drag=false" @end="drag=false" style="padding:1em 0;">空白区</div>
               <p style="font-size:12px;">- - 》》插口槽 Is Here《《 - -</p>
             </draggable>
           </el-col>
           <!-- 行删除btn -->
-          <el-button type="danger" icon="el-icon-delete" circle title="删除该行" @click="deleteRow(row.id)" style="position:absolute; left:-10px; top:10px;"></el-button>
+          <el-button type="danger" icon="el-icon-delete" circle title="删除该行" @click="deleteRow(rowIndex)" style="position:absolute; left:-10px; top:10px;"></el-button>
         </el-row>
       </el-main>
-      <!-- <pre style="text-align:left;">{{rows}}</pre> -->
+      <pre style="text-align:left;">{{rows}}</pre>
     </el-container>
     <transition name="fade">
       <ProtalPreview v-if="isPreview" :contents="rows" @previewclose="preview"></ProtalPreview>
@@ -38,7 +42,6 @@
 </template>
 
 <script>
-import UUID from "es6-uuid";
 import draggable from "vuedraggable";
 import WidgetArea from "@/components/portalconfig/WidgetArea.vue";
 import ProtalPreview from "@/components/portalconfig/PortalPreview.vue";
@@ -46,25 +49,41 @@ import ProtalPreview from "@/components/portalconfig/PortalPreview.vue";
 import ayay from "@/components/widgets/index.js";
 
 export default {
-  name: "sb",
-  props: {
-    msg: String
-  },
+  name: "PortalEditor",
   components: {
     draggable,
     WidgetArea,
     ProtalPreview,
     ...ayay.components
   },
+  created() {
+    // this.$store.state.loadingInstance =
+    this.init();
+  },
+  watch: {
+    "$store.state.userid": function() {
+      this.init();
+    }
+  },
   methods: {
+    init() {
+      this.$axios
+        .get("http://localhost:8081/config/sites/" + this.$store.state.userid)
+        .then(response => {
+          this.rows = response.data.pro;
+        })
+        .catch(errors => {
+          console.error(errors);
+        });
+    },
+    save() {},
+    confirmUpdate() {},
     addRow(cols = [6, 6, 6, 6]) {
       const newRow = {
-        id: UUID(32, 36),
         zones: []
       };
       cols.forEach(colsize => {
         newRow.zones.push({
-          id: UUID(32, 36),
           size: colsize,
           widgets: []
         });
@@ -75,74 +94,24 @@ export default {
       this.isPreview =
         vbool === null || vbool === undefined ? !this.isPreview : !!vbool;
     },
-    deleteRow(rowid) {
-      const findIndex = this.rows.findIndex(item => item.id == rowid);
-      this.rows.splice(findIndex, 1);
+    deleteRow(rowIndex) {
+      this.rows.splice(rowIndex, 1);
     }
   },
   data() {
     return {
       isPreview: false,
-      rows: [
-        {
-          id: UUID(32, 36),
-          zones: [
-            {
-              id: UUID(32, 36),
-              size: 12,
-              widgets: [
-                {
-                  id: UUID(32, 36),
-                  name: "AyaExample",
-                  alias: "第一纵Origin左边左"
-                }
-              ]
-            },
-            {
-              id: UUID(32, 36),
-              size: 12,
-              widgets: [
-                {
-                  id: UUID(32, 36),
-                  name: "AyaExample",
-                  alias: "第一纵Origin右边右"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          id: UUID(32, 36),
-          zones: [
-            {
-              id: UUID(32, 36),
-              size: 8,
-              widgets: [
-                {
-                  id: UUID(32, 36),
-                  name: "AyaTimer",
-                  alias: "预设Timer"
-                }
-              ]
-            },
-            {
-              id: UUID(32, 36),
-              size: 8,
-              widgets: []
-            },
-            {
-              id: UUID(32, 36),
-              size: 8,
-              widgets: []
-            }
-          ]
-        }
-      ]
+      rows: []
     };
   }
 };
 </script>
 <style lang="scss">
+.portal__editor {
+  padding: 10px 20px;
+  text-align: center;
+}
+
 .cursor--forbid {
   cursor: not-allowed !important;
 }

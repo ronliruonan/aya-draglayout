@@ -5,7 +5,9 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    loadingInstance: null
+    loadingInstance: null,
+    username: null,
+    userid: "aya"
   },
   mutations: {},
   actions: {}

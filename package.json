@@ -4,13 +4,13 @@
   "private": true,
   "scripts": {
     "start": "vue-cli-service serve  --port 8100 --copy",
-    "build": "vue-cli-service build",
+    "build": "vue-cli-service build --dest docs",
     "lint": "vue-cli-service lint",
     "test:e2e": "vue-cli-service test:e2e"
   },
   "dependencies": {
+    "axios": "^0.18.0",
     "element-ui": "^2.4.8",
-    "es6-uuid": "^1.0.1",
     "vue": "^2.5.17",
     "vue-router": "^3.0.1",
     "vuedraggable": "^2.16.0",
