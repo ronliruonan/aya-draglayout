@@ -1,6 +1,8 @@
 // vue.config.js
 module.exports = {
-  baseUrl: ""
+  baseUrl: process.env.NODE_ENV === "production" ? "/aya-draglayout/" : "/"
+  // productionGzip: true,
+  // productionGzipExtensions: ["js", "css"] failed
   // configureWebpack: config => {
   //   if (process.env.NODE_ENV === "production") {
   //     // 为生产环境修改配置
