@@ -1,6 +1,6 @@
 // vue.config.js
 module.exports = {
-  baseUrl: process.env.NODE_ENV === "production" ? "/aya-draglayout/" : "/"
+  publicPath: process.env.NODE_ENV === "production" ? "/aya-draglayout/" : "/"
   // productionGzip: true,
   // productionGzipExtensions: ["js", "css"] failed
   // configureWebpack: config => {
