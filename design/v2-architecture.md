@@ -13,7 +13,7 @@
 
 M0 的 PageRenderer 接收 unknown，在渲染边界校验；拒绝任意组件名称和未知属性。文本使用 Vue 插值，不使用 v-html。容器列数通过协议限制；renderer 可被独立嵌入。当前只面向桌面端，不提供手机布局或窄屏切换。
 
-主应用 App.vue 仅为 M0 演示壳。示例数据放在 sample.ts；指标均为明确标注的示例，不代表真实业务或分成。
+主应用 App.vue 连接桌面编辑器、core 与生成弹窗。示例数据放在 sample.ts；指标均为明确标注的示例，不代表真实业务或分成。
 
 旧版 rows/zones/widgets 不是 v2 协议，不静默视作新版本；如需迁移，在 M1 单独定义转换器与测试。M0 不改旧版路由和 GitHub Pages 发布。
 
@@ -24,3 +24,9 @@ M0 的 PageRenderer 接收 unknown，在渲染边界校验；拒绝任意组件�
 命令包括 insert、remove、move、updateProps、rename、replace 和 clear。移动索引以源节点移除后的目标列表为准，UI 的拖拽放置区负责转换同级索引；不能将容器移入自身或后代。undo/redo 同时恢复页面名称和节点数据。
 
 EditorTree 为编辑态递归视图，使用相同 widgets；仅通过事件交给 App 调用 core。纯预览继续使用独立 PageRenderer。选择状态与未应用的表单草稿属于 editor，不写入页面 JSON。
+
+## M2 候选生成边界
+
+LayoutProvider.generate 接收需求及 AbortSignal，返回 unknown。generateLayout 验证需求并通过 parsePage 校验返回结果。mockProvider 只演示本地关键词组合；后续真实 Provider 复用此边界。
+
+GenerateDialog 独立保存候选、请求状态与取消控制器，不持有 core。只有用户确认时向 App 发出 apply 事件，由 App 执行 replace。关闭、编辑需求和取消时避免旧候选被误用；请求序号阻止过期响应更新界面。

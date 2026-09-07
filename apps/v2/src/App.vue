@@ -5,6 +5,8 @@ import { allowDrop } from "./aya/editor/dragGuard";
 import PageRenderer from "./aya/renderer/PageRenderer.vue";
 import EditorTree from "./aya/editor/EditorTree.vue";
 import { createEditor } from "./aya/core";
+import GenerateDialog from "./aya/ai/GenerateDialog.vue";
+import type { PageDocument } from "./aya/schema";
 import type { PageNode } from "./aya/schema";
 import { widgetRegistry } from "./aya/widgets";
 import { samplePage } from "./sample";
@@ -16,6 +18,24 @@ const preview = ref(false);
 const message = ref("点击组件进行编辑，或从左侧拖入新组件。");
 const failed = ref(false);
 const jsonOpen = ref(false);
+const aiOpen = ref(false);
+const aiTrigger = ref<HTMLButtonElement | null>(null);
+function closeAI() {
+  aiOpen.value = false;
+  nextTick(() => aiTrigger.value?.focus());
+}
+function applyGenerated(document: PageDocument) {
+  if (
+    run(
+      () => editor.execute({ type: "replace", document }),
+      "已应用生成布局，可撤销恢复",
+    )
+  ) {
+    selectedId.value = null;
+    preview.value = false;
+    closeAI();
+  }
+}
 const jsonText = ref("");
 const jsonError = ref("");
 const title = ref(page.value.title);
@@ -67,7 +87,8 @@ const { container: layoutDefinition, ...paletteWidgets } = widgetRegistry;
 function addLayout(columns: 1 | 2 | 3, parentId: string | null = null) {
   const parent = locate(page.value.nodes, parentId);
   if (parentId !== null && parent?.type !== "container") return;
-  const children = parent?.type === "container" ? parent.children : page.value.nodes;
+  const children =
+    parent?.type === "container" ? parent.children : page.value.nodes;
   const node: PageNode = {
     id: `node-${crypto.randomUUID()}`,
     type: "container",
@@ -83,7 +104,9 @@ function addLayout(columns: 1 | 2 | 3, parentId: string | null = null) {
           parentId,
           index: children.length,
         }),
-      parentId === null ? "已添加布局区域，请从左侧拖入组件" : "已在当前布局内添加子布局",
+      parentId === null
+        ? "已添加布局区域，请从左侧拖入组件"
+        : "已在当前布局内添加子布局",
     )
   ) {
     selectedId.value = node.id;
@@ -276,7 +299,7 @@ function download() {
   message.value = "已导出 aya-layout.json";
 }
 function keyboard(event: KeyboardEvent) {
-  if (jsonOpen.value) return;
+  if (jsonOpen.value || aiOpen.value) return;
   const target = event.target as HTMLElement;
   if (target.closest("input,textarea,select,[contenteditable=true]")) return;
   if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "z") {
@@ -369,6 +392,7 @@ onUnmounted(() => {
         <small>添加后，从左侧拖入组件</small>
       </div>
       <div class="editor-toolbar">
+        <button ref="aiTrigger" @click="aiOpen = true">生成布局（模拟）</button>
         <div>
           <button :disabled="!canUndo" @click="undo">撤销</button
           ><button :disabled="!canRedo" @click="redo">重做</button>
@@ -467,7 +491,11 @@ onUnmounted(() => {
           </template>
           <button class="source-toggle" type="submit">应用属性</button>
         </form>
-        <section v-if="selected.type === 'container'" class="child-layouts" aria-label="添加子布局">
+        <section
+          v-if="selected.type === 'container'"
+          class="child-layouts"
+          aria-label="添加子布局"
+        >
           <h3>添加子布局</h3>
           <p>添加到当前选中的布局内部</p>
           <div>
@@ -491,6 +519,7 @@ onUnmounted(() => {
       </p>
     </aside>
   </div>
+  <GenerateDialog v-if="aiOpen" @close="closeAI" @apply="applyGenerated" />
   <div v-if="jsonOpen" class="json-backdrop" @keydown="dialogKeys">
     <section
       class="json-dialog"
