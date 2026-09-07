@@ -1,5 +1,7 @@
 # aya-draglayout
 
+*aya-draglayout 是一个基于 Vue 的开源可视化拖拽布局项目。目前支持组件拖拽与动态组合，尚未接入 AI 服务。计划增加自然语言生成布局功能，并将 [OrcaRouter](https://www.orcarouter.ai/ref/ref_38c9597fe1529a31aaec) 作为可选模型服务提供商，让用户配置自己的 API Key，将生成的布局应用到编辑器中。*
+
 这个是自己调研的一个比较糙的Demo, 里面有些垃圾代码，有点乱 
 
 主要有两个核心点：
