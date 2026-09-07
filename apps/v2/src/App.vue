@@ -63,6 +63,33 @@ function undo() {
 function redo() {
   run(() => editor.redo(), "已重做");
 }
+const { container: layoutDefinition, ...paletteWidgets } = widgetRegistry;
+function addLayout(columns: 1 | 2 | 3, parentId: string | null = null) {
+  const parent = locate(page.value.nodes, parentId);
+  if (parentId !== null && parent?.type !== "container") return;
+  const children = parent?.type === "container" ? parent.children : page.value.nodes;
+  const node: PageNode = {
+    id: `node-${crypto.randomUUID()}`,
+    type: "container",
+    props: { title: layoutDefinition.defaults.title, columns },
+    children: [],
+  };
+  if (
+    run(
+      () =>
+        editor.execute({
+          type: "insert",
+          node,
+          parentId,
+          index: children.length,
+        }),
+      parentId === null ? "已添加布局区域，请从左侧拖入组件" : "已在当前布局内添加子布局",
+    )
+  ) {
+    selectedId.value = node.id;
+    preview.value = false;
+  }
+}
 function newNode(type: keyof typeof widgetRegistry): PageNode {
   return {
     ...{
@@ -288,12 +315,12 @@ onUnmounted(() => {
   <div class="workspace m1-workspace">
     <aside class="sidebar">
       <h1 class="panel-title">
-        组件区 <span>{{ Object.keys(widgetRegistry).length }}</span>
+        组件区 <span>{{ Object.keys(paletteWidgets).length }}</span>
       </h1>
       <p class="hint">拖入画布，或点击添加</p>
       <div ref="paletteRef" class="palette">
         <button
-          v-for="(entry, key) in widgetRegistry"
+          v-for="(entry, key) in paletteWidgets"
           :key="key"
           :data-widget="key"
           @click="insert(key)"
@@ -312,7 +339,7 @@ onUnmounted(() => {
           {{ entry.label }}<span aria-hidden="true">＋</span>
         </button>
       </div>
-      <p class="hint palette-hint">拖动组件标题可排序或移入容器。</p>
+      <p class="hint palette-hint">拖动组件标题可排序或移入布局区域。</p>
     </aside>
     <main>
       <div class="page-title">
@@ -333,6 +360,13 @@ onUnmounted(() => {
         <button class="source-toggle" @click="preview = !preview">
           {{ preview ? "返回编辑" : "预览页面" }}
         </button>
+      </div>
+      <div class="layout-toolbar" role="group" aria-label="添加布局">
+        <span>添加布局</span>
+        <button @click="addLayout(1)">单列</button>
+        <button @click="addLayout(2)">双列</button>
+        <button @click="addLayout(3)">三列</button>
+        <small>添加后，从左侧拖入组件</small>
       </div>
       <div class="editor-toolbar">
         <div>
@@ -359,7 +393,7 @@ onUnmounted(() => {
         <div class="canvas">
           <div class="canvas-caption">
             {{ preview ? "页面预览" : "布局画布"
-            }}<span>{{ page.nodes.length }} 个根组件</span>
+            }}<span>{{ page.nodes.length }} 项内容</span>
           </div>
           <PageRenderer v-if="preview" :document="page" /><EditorTree
             v-else
@@ -377,7 +411,9 @@ onUnmounted(() => {
       </div>
     </main>
     <aside class="inspector">
-      <h2 class="panel-title">组件属性</h2>
+      <h2 class="panel-title">
+        {{ selected?.type === "container" ? "布局属性" : "组件属性" }}
+      </h2>
       <template v-if="selected"
         ><p class="selected-type">
           {{ widgetRegistry[selected.type].label }}
@@ -410,7 +446,7 @@ onUnmounted(() => {
               /></label></template
           ><template v-else-if="selected.type === 'container'"
             ><label
-              >容器标题<input v-model="draft.title" maxlength="200" /></label
+              >布局标题<input v-model="draft.title" maxlength="200" /></label
             ><label
               >列数<select v-model.number="draft.columns">
                 <option :value="1">1 列</option>
@@ -431,13 +467,24 @@ onUnmounted(() => {
           </template>
           <button class="source-toggle" type="submit">应用属性</button>
         </form>
+        <section v-if="selected.type === 'container'" class="child-layouts" aria-label="添加子布局">
+          <h3>添加子布局</h3>
+          <p>添加到当前选中的布局内部</p>
+          <div>
+            <button @click="addLayout(1, selected.id)">单列</button>
+            <button @click="addLayout(2, selected.id)">双列</button>
+            <button @click="addLayout(3, selected.id)">三列</button>
+          </div>
+        </section>
         <button
           v-if="selected.type === 'container'"
           class="add-inside"
           @click="insert('text', selected.id)"
         >
-          ＋ 在容器内添加文本</button
-        ><button class="delete-node" @click="remove">删除组件</button></template
+          ＋ 在布局内添加文本</button
+        ><button class="delete-node" @click="remove">
+          {{ selected.type === "container" ? "删除布局" : "删除组件" }}
+        </button></template
       >
       <p v-else class="hint">
         在画布上选择一个组件，<br />开始编辑它的内容与属性。

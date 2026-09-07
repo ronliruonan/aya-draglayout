@@ -34,8 +34,8 @@ export const widgetRegistry = {
     defaults: { label: "指标", value: "0", detail: "指标说明" },
   },
   container: {
-    label: "容器",
+    label: "布局区域",
     component: ContainerWidget,
-    defaults: { title: "分组", columns: 2 as const },
+    defaults: { title: "布局区域", columns: 2 as const },
   },
 } as const;

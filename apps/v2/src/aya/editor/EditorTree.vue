@@ -121,7 +121,7 @@ onBeforeUnmount(() => sortable?.destroy());
       />
     </section>
     <div v-if="!nodes.length" class="empty-drop">
-      拖入组件，或从组件区点击添加
+      从左侧拖入组件
     </div>
   </div>
 </template>
