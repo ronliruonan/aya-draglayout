@@ -24,6 +24,38 @@ const container = (children: PageNode[], id = "container-1"): PageNode => ({
 });
 
 describe("parsePage", () => {
+  it("round-trips legacy widgets using version 1 without runtime state", () => {
+    const input = page([
+      {
+        id: "example",
+        type: "example",
+        props: { title: "提示", description: "拖拽我" },
+      },
+      { id: "timer", type: "timer", props: { title: "秒计时" } },
+      { id: "cmd", type: "cmd-loading", props: { title: "加载" } },
+    ]);
+    expect(parsePage(JSON.parse(JSON.stringify(input)))).toEqual(input);
+  });
+
+  it.each(["example", "timer", "cmd-loading"])(
+    "validates properties of %s widgets",
+    (type) => {
+      const props =
+        type === "example"
+          ? { title: "提示", description: "内容" }
+          : { title: "挂件" };
+      const input = (value: unknown) => ({
+        ...page(),
+        nodes: [{ id: "widget", type, props: value }],
+      });
+      expect(() => parsePage(input({ ...props, title: 123 }))).toThrow();
+      expect(() =>
+        parsePage(input({ ...props, title: "a".repeat(201) })),
+      ).toThrow();
+      expect(() => parsePage(input({ ...props, elapsedSeconds: 4 }))).toThrow();
+    },
+  );
+
   it("accepts and clones a document with every supported component", () => {
     const input = page([
       container([

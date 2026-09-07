@@ -9,10 +9,10 @@ const render = (document: unknown) =>
 describe("PageRenderer boundary", () => {
   it("renders nested registered widgets from the sample page", async () => {
     const html = await render(samplePage);
-    expect(html).toContain("让想法，拥有自己的布局。");
-    expect(html).toContain("进行中的项目");
-    expect(html).toContain("86%");
-    expect(html).toContain("留一点空间");
+    expect(html).toContain("示例挂件");
+    expect(html).toContain("出生于");
+    expect(html).toContain("0s");
+    expect(html).toContain("加载动画");
   });
   it("rejects unknown components rather than rendering partial data", async () => {
     const html = await render({
@@ -21,7 +21,7 @@ describe("PageRenderer boundary", () => {
     });
     expect(html).toContain('role="alert"');
     expect(html).not.toContain("<iframe");
-    expect(html).not.toContain("进行中的项目");
+    expect(html).not.toContain("示例挂件");
   });
   it("escapes text as text instead of rendering markup", async () => {
     const html = await render({

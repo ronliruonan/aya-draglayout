@@ -5,6 +5,13 @@ export const PAGE_LIMITS = { bytes: 256_000, nodes: 200, depth: 12 } as const;
 export type PageNode =
   | {
       id: string;
+      type: "example";
+      props: { title: string; description: string };
+    }
+  | { id: string; type: "timer"; props: { title: string } }
+  | { id: string; type: "cmd-loading"; props: { title: string } }
+  | {
+      id: string;
       type: "text";
       props: { text: string; tone: "heading" | "body" };
     }
@@ -33,6 +40,32 @@ const id = z
   .regex(/^[a-zA-Z0-9_-]+$/, "ID 只能包含字母、数字、下划线或连字符");
 const nodeSchema: z.ZodType<PageNode> = z.lazy(() =>
   z.discriminatedUnion("type", [
+    z
+      .object({
+        id,
+        type: z.literal("example"),
+        props: z
+          .object({
+            title: z.string().max(200),
+            description: z.string().max(1_000),
+          })
+          .strict(),
+      })
+      .strict(),
+    z
+      .object({
+        id,
+        type: z.literal("timer"),
+        props: z.object({ title: z.string().max(200) }).strict(),
+      })
+      .strict(),
+    z
+      .object({
+        id,
+        type: z.literal("cmd-loading"),
+        props: z.object({ title: z.string().max(200) }).strict(),
+      })
+      .strict(),
     z
       .object({
         id,
