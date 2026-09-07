@@ -1,0 +1,353 @@
+:root {
+  font-family: "Avenir Next", "PingFang SC", "Microsoft YaHei", sans-serif;
+  color: #263d39;
+  background: #f6f7f3;
+  font-synthesis: none;
+  font-size: 14px;
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  min-width: 1100px;
+  margin: 0;
+}
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+button {
+  font: inherit;
+  cursor: pointer;
+}
+button:focus-visible,
+a:focus-visible,
+pre:focus-visible {
+  outline: 3px solid #bb5a32;
+  outline-offset: 4px;
+}
+.topbar {
+  height: 78px;
+  border-bottom: 1px solid #d9ded7;
+  display: flex;
+  align-items: center;
+  padding: 0 36px;
+  gap: 24px;
+  background: #fcfcf9;
+}
+.brand {
+  color: #244c43;
+  text-decoration: none;
+  font-size: 36px;
+  font-weight: 800;
+  letter-spacing: -2px;
+}
+.brand span {
+  font-size: 13px;
+  letter-spacing: 1px;
+  font-weight: 500;
+  margin-left: 18px;
+}
+.version {
+  font-size: 11px;
+  background: #edf0e8;
+  border: 1px solid #dce2d6;
+  padding: 6px 10px;
+  border-radius: 4px;
+}
+.status {
+  margin-left: auto;
+  color: #53695f;
+  font-size: 12px;
+}
+.status i,
+.green-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  background: #3b8061;
+  border-radius: 50%;
+  margin-right: 8px;
+}
+.workspace {
+  display: grid;
+  grid-template-columns: 258px minmax(0, 1fr);
+  min-height: calc(100vh - 78px);
+}
+.sidebar {
+  padding: 38px 25px;
+  position: relative;
+  border-right: 1px solid #d9ded7;
+  background: #eef1e8;
+  display: flex;
+  flex-direction: column;
+}
+.eyebrow {
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: #6c7b70;
+  font-weight: 600;
+  margin: 0 0 18px;
+}
+.sidebar h1 {
+  font-size: 26px;
+  line-height: 1.6;
+  font-weight: 500;
+  letter-spacing: 1px;
+  margin: 0;
+}
+.sidebar-description {
+  color: #657368;
+  line-height: 1.9;
+  margin: 14px 0 26px;
+}
+.sidebar-rule {
+  height: 1px;
+  background: #d3dace;
+  margin-bottom: 25px;
+}
+.small-title {
+  font-size: 12px;
+  display: flex;
+  justify-content: space-between;
+  font-weight: 500;
+}
+.small-title span {
+  color: #738172;
+}
+.widget-list {
+  list-style: none;
+  padding: 0;
+  margin: 12px 0;
+}
+.widget-list li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 13px 10px;
+  border: 1px solid #d7dfd1;
+  border-radius: 5px;
+  background: #f8f9f4;
+  margin-bottom: 9px;
+}
+.widget-icon {
+  font-family: Georgia, serif;
+  font-size: 20px;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  color: #406854;
+}
+.available {
+  font-size: 10px;
+  margin-left: auto;
+  color: #62775d;
+}
+.hint {
+  font-size: 11px;
+  line-height: 1.9;
+  color: #6b776d;
+}
+.sidebar-footer {
+  margin-top: auto;
+  padding-top: 70px;
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: #566b5d;
+}
+.sidebar-footer span {
+  display: block;
+  letter-spacing: 1px;
+  font-size: 11px;
+  margin-top: 12px;
+  color: #758171;
+}
+main {
+  min-width: 0;
+  padding: 35px 42px;
+}
+.page-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 28px;
+}
+.page-title .eyebrow {
+  margin-bottom: 10px;
+}
+.page-title h2 {
+  font-size: 25px;
+  letter-spacing: 1px;
+  font-weight: 500;
+  margin: 0;
+}
+.page-title h2 span {
+  font-size: 11px;
+  color: #7a837a;
+  font-weight: 400;
+  letter-spacing: 0;
+  margin-left: 14px;
+}
+.source-toggle {
+  background: #244d43;
+  color: #fff;
+  border: 0;
+  padding: 12px 16px;
+  border-radius: 5px;
+  font-size: 12px;
+}
+.source-toggle:hover {
+  background: #356857;
+}
+.source-toggle span {
+  margin-left: 14px;
+}
+.preview-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background: #fcfcf9;
+  border: 1px solid #dce1d8;
+  border-radius: 7px 7px 0 0;
+  font-size: 11px;
+}
+.stage {
+  padding: 36px;
+  background-color: #e9ede4;
+  background-image: radial-gradient(#c7cfc1 0.7px, transparent 0.7px);
+  background-size: 14px 14px;
+  border: 1px solid #dce1d8;
+  border-top: 0;
+  min-height: 550px;
+}
+.canvas {
+  max-width: 100%;
+  width: 100%;
+  margin: auto;
+  background: #fffefa;
+  border: 1px solid #e0e3d8;
+  box-shadow: 0 8px 24px #273c2810;
+  padding: 30px 34px;
+}
+.canvas-caption {
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: #687966;
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid #e1e5db;
+  padding-bottom: 22px;
+  margin-bottom: 30px;
+}
+.widget-heading {
+  font-family: "Songti SC", "STSong", Georgia, serif;
+  font-size: clamp(24px, 3vw, 36px);
+  font-weight: 500;
+  line-height: 1.5;
+  letter-spacing: 1px;
+  margin: 0 0 14px;
+}
+.widget-text {
+  font-size: 12px;
+  line-height: 2;
+  color: #6c786d;
+  margin: 0 0 18px;
+  overflow-wrap: anywhere;
+}
+.container-widget {
+  margin: 26px 0 0;
+  min-width: 0;
+}
+.container-widget h3 {
+  font-size: 12px;
+  font-weight: 500;
+  margin: 0 0 14px;
+  color: #4f6454;
+}
+.container-grid {
+  display: grid;
+  grid-template-columns: repeat(var(--columns), minmax(0, 1fr));
+  gap: 12px;
+}
+.metric {
+  background: #f0f3ea;
+  padding: 20px 17px;
+  border-top: 2px solid #9caf85;
+  min-width: 0;
+}
+.metric p {
+  font-size: 11px;
+  color: #526450;
+  margin: 0 0 16px;
+}
+.metric strong {
+  display: block;
+  font-family: Georgia, serif;
+  font-weight: 400;
+  font-size: 38px;
+  letter-spacing: -1px;
+  color: #2b513c;
+  overflow-wrap: anywhere;
+}
+.metric small {
+  font-size: 9px;
+  color: #687760;
+  display: block;
+  margin-top: 14px;
+}
+.canvas-footer {
+  border-top: 1px solid #e1e5db;
+  margin-top: 30px;
+  padding-top: 18px;
+  font-size: 8px;
+  letter-spacing: 1px;
+  color: #75816c;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+.workspace-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 10px;
+  color: #71816f;
+  margin-top: 17px;
+}
+.source-panel {
+  margin-top: 22px;
+  background: #fffefa;
+  border: 1px solid #dce1d8;
+  padding: 20px;
+  border-radius: 5px;
+}
+.source-panel h3 {
+  font-size: 13px;
+  margin-top: 0;
+}
+.source-panel h3 span {
+  float: right;
+  color: #70816a;
+  font-weight: 400;
+  font-size: 11px;
+}
+.source-panel pre {
+  overflow: auto;
+  max-height: 350px;
+  font-size: 12px;
+  line-height: 1.7;
+  color: #3c654d;
+}
+.error {
+  padding: 20px;
+  background: #fff0e9;
+  color: #8d3617;
+}
+
+/* Schema-valid long words must remain inside their desktop layout cells. */
+.page-renderer {
+  overflow-wrap: anywhere;
+}
