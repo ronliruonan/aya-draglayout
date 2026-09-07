@@ -1,0 +1,60 @@
+name: Build and deploy demos
+
+on:
+  push:
+    branches: [master, codex/v2]
+  pull_request:
+    branches: [master, codex/v2]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: apps/v2/package-lock.json
+      - name: Install v2 dependencies
+        working-directory: apps/v2
+        run: npm ci
+      - name: Test v2
+        working-directory: apps/v2
+        run: npm test
+      - name: Build v2
+        working-directory: apps/v2
+        run: npm run build
+      - name: Assemble legacy root and v2 subdirectory
+        run: node scripts/prepare-pages.mjs
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: .pages
+
+  deploy:
+    # Until v2 graduates, only codex/v2 owns the live site. PRs never deploy.
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/codex/v2'
+    needs: build
+    runs-on: ubuntu-latest
+    concurrency:
+      group: github-pages
+      cancel-in-progress: false
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/configure-pages@v5
+      - name: Deploy both demos
+        id: deployment
+        uses: actions/deploy-pages@v5

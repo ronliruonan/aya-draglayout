@@ -22,3 +22,6 @@ yarn-error.log*
 *.njsproj
 *.sln
 *.sw*
+
+# Combined GitHub Pages artifact (legacy root + v2)
+/.pages/
