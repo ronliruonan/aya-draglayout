@@ -19,7 +19,7 @@
   "devDependencies": {
     "@cypress/webpack-preprocessor": "^3.0.0",
     "@vue/cli-plugin-babel": "^3.7.0",
-    "@vue/cli-plugin-e2e-cypress": "^3.0.5",
+    "@vue/cli-plugin-e2e-cypress": "^5.0.8",
     "@vue/cli-plugin-eslint": "^3.0.5",
     "@vue/cli-service": "^3.7.0",
     "@vue/eslint-config-prettier": "^3.0.5",
